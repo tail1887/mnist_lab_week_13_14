@@ -6,13 +6,27 @@ import numpy as np
 from losses import cross_entropy_loss
 
 
-def train(model, optimizer, x_train, y_train, epochs=20, batch_size=128):
+def train(
+    model,
+    optimizer,
+    x_train,
+    y_train,
+    epochs=20,
+    batch_size=128,
+    x_val=None,
+    y_val=None,
+    verbose=False,
+):
     """
     미니배치 학습 루프.
 
     한 배치마다 Forward -> Loss -> Backward -> Optimizer 업데이트 순서로 진행합니다.
     교육생은 이 함수에서 "예측값을 만들고, 손실을 계산하고, gradient로 파라미터를 바꾸는"
     전체 흐름을 확인할 수 있습니다.
+
+    Args:
+        x_val, y_val: epoch마다 함께 확인할 검증/테스트 데이터
+        verbose: True이면 epoch별 loss와 accuracy를 출력
 
     Returns:
         loss_history: epoch별 평균 손실 리스트
@@ -49,7 +63,21 @@ def train(model, optimizer, x_train, y_train, epochs=20, batch_size=128):
             # loss는 배치 평균이므로, 샘플 수를 곱해 epoch 전체 평균을 계산할 준비를 합니다.
             epoch_loss += loss * current_batch_size
 
-        loss_history.append(epoch_loss / len(x_train))
+        avg_loss = epoch_loss / len(x_train)
+        loss_history.append(avg_loss)
+
+        if verbose:
+            # 추론 모드로 전체 학습 데이터 정확도를 계산해 epoch별 학습 상태를 확인합니다.
+            train_pred = model.predict(x_train)
+            train_acc = np.mean(np.argmax(train_pred, axis=1) == y_train) * 100
+            message = f"Epoch {epoch + 1:02d}/{epochs} - loss: {avg_loss:.4f} - train_acc: {train_acc:.2f}%"
+
+            if x_val is not None and y_val is not None:
+                val_pred = model.predict(x_val)
+                val_acc = np.mean(np.argmax(val_pred, axis=1) == y_val) * 100
+                message += f" - val_acc: {val_acc:.2f}%"
+
+            print(message)
     return loss_history
 
 def evaluate(model, x, y):
