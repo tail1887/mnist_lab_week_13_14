@@ -34,7 +34,7 @@ class Affine:
         """
         # TODO: backward에서 사용할 입력 x를 저장하고 x @ W + b를 반환하세요.
         self.x = x
-        out = x @ self.W +self.b
+        out = x @ self.W + self.b
         return out
 
     def backward(self, dout):

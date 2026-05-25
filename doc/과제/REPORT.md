@@ -72,18 +72,31 @@
 - 구현 대상: `ReLU.forward`, `ReLU.backward`
 - 수정 파일: `src/activations.py`
 - 테스트 명령: `pytest tests/test_relu.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 1.54.11.png
+
+- 테스트 결과 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 1.55.55.png
+
+- 수정 내용 및 확인한 점: 
+레루 함수에서 들어오는 x는 affine forward함수의 리턴값이다.
+역전파에서 마스크값이 0인 a와 연결된 모든 노드는 막힌다
+레루함수를 적용하는김에 마스크를 만들고 이 마스크는 역전파에서 신호가 없는 노드를 표현하기 위해서 활용한다.
 
 ### 3.2 Step 2: Softmax
 
 - 구현 대상: `Softmax.forward`, `Softmax.backward`
 - 수정 파일: `src/activations.py`
 - 테스트 명령: `pytest tests/test_softmax.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 2.01.29.png
+
+- 테스트 결과 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 2.03.04.png
+
+- 수정 내용 및 확인한 점: 
+np.max(x)를 그냥 사용해도 테스트가 통과하는데 이부분은 입력이 1차원 벡터면 상관없지만 그 외에는 문제가 발생하게 된다. 
+예: 사진이 여러장일 때, 각각의 최댓값이 아닌 하나의 최댓값을 공유하게됨
 
 ### 3.3 Step 3: Affine
 
@@ -91,17 +104,34 @@
 - 수정 파일: `src/layers.py`
 - 테스트 명령: `pytest tests/test_affine.py -v`
 - 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 2.47.26.png
+
+- 테스트 결과 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 2.49.33.png
+
+- 수정 내용 및 확인한 점: 
+식, x @ W + b에 대해
+x를 기준으로 편미분하면 -> W
+W를 기준으로 편미분하면 -> x
+b를 기준으로 편미분하면 -> 1
+각 변수,
+dx는 x값이 loss에 미치는 영향
+dW는 가중치가 loss에 미치는 영향
+db는 b(편향)이 loss에 미치는 영향이다.
 
 ### 3.4 Step 4: Cross Entropy Loss
 
 - 구현 대상: `cross_entropy_loss`
 - 수정 파일: `src/losses.py`
 - 테스트 명령: `pytest tests/test_cross_entropy_loss.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷:
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 3.46.35.png
+
+- 테스트 결과 스크린샷:
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 3.47.39.png
+
+- 수정 내용 및 확인한 점:
+교차 엔트로피 오차는 소프트 맥스 함수와 환상의 짝궁이다. 역전파 과정에서 교차 엔트로피의 미분값이랑 소프트맥스의 미분값이랑 곱하면 항들이 정리되어 식이 깔끔해진다. 
 
 ### 3.5 Step 5: SGD
 
