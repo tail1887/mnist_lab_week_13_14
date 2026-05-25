@@ -564,7 +564,7 @@ Adam-3에서 learning rate를 낮췄을 때 test accuracy가 가장 높았고 lo
 **스크린샷**
 
 - 학습 로그: 
-<img src="image/스크린샷 2026-05-25 오후 11.07.20.png" alt="스크린샷" width="700">
+<img src="image/스크린샷 2026-05-25 오후 11.07.20.png" alt="스크린샷" width="700">
 - Loss curve: 
 <img src="image/스크린샷 2026-05-25 오후 11.08.45.png" alt="스크린샷" width="700">
 
