@@ -64,7 +64,7 @@ class Softmax:
         # 힌트: np.max(..., axis=1, keepdims=True), np.exp, np.sum을 사용합니다.
         c = np.max(x)
         exp_a = np.exp(x-c)
-        sum_exp_a = np.sum(exp_a)
+        sum_exp_a = np.sum(exp_a, axis=1, keepdims=True)
         y = exp_a / sum_exp_a
         return y
 
@@ -74,4 +74,4 @@ class Softmax:
         여기서는 받은 gradient를 그대로 통과시킵니다.
         """
         # TODO: train()에서 만든 gradient를 그대로 반환하세요.
-        raise NotImplementedError("Softmax.backward를 구현하세요.")
+        return dout
