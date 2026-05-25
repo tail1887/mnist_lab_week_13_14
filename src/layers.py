@@ -89,7 +89,21 @@ class BatchNorm:
         """
         # TODO: train=True에서는 batch mean/var로 정규화하고 running 통계를 갱신하세요.
         # TODO: train=False에서는 running_mean/running_var를 사용하세요.
-        raise NotImplementedError("BatchNorm.forward를 구현하세요.")
+        if train:
+            mean = np.mean(x, axis=0)
+            var = np.var(x, axis=0)
+            self.x_centered = x - mean
+            self.std = np.sqrt(var + self.eps)
+            self.x_norm = self.x_centered / self.std
+
+            self.running_mean = self.momentum * self.running_mean + (1 - self.momentum) * mean
+            self.running_var = self.momentum * self.running_var + (1 - self.momentum) * var
+        else:
+            self.x_centered = x - self.running_mean
+            self.std = np.sqrt(self.running_var + self.eps)
+            self.x_norm = self.x_centered / self.std
+
+        return self.gamma * self.x_norm + self.beta
 
     def backward(self, dout):
         """
@@ -103,7 +117,17 @@ class BatchNorm:
         """
         # TODO: self.dbeta, self.dgamma, dx를 계산하세요.
         # 힌트: 먼저 dbeta와 dgamma shape가 beta/gamma와 같은지 확인합니다.
-        raise NotImplementedError("BatchNorm.backward를 구현하세요.")
+        batch_size = dout.shape[0]
+        self.dbeta = np.sum(dout, axis=0)
+        self.dgamma = np.sum(dout * self.x_norm, axis=0)
+
+        dx_norm = dout * self.gamma
+        dx = (
+            dx_norm
+            - np.mean(dx_norm, axis=0)
+            - self.x_norm * np.mean(dx_norm * self.x_norm, axis=0)
+        ) / self.std
+        return dx
 
 
 class Dropout:
@@ -126,9 +150,12 @@ class Dropout:
         """
         # TODO: train=True에서는 mask를 만들고 x에 곱하세요.
         # TODO: train=False에서는 x * (1 - drop_ratio)를 반환하세요.
-        raise NotImplementedError("Dropout.forward를 구현하세요.")
+        if train:
+            self.mask = np.random.rand(*x.shape) > self.drop_ratio
+            return x * self.mask
+        return x * (1 - self.drop_ratio)
 
     def backward(self, dout):
         """forward에서 꺼졌던 뉴런 위치에는 gradient도 흘리지 않습니다."""
         # TODO: forward에서 만든 mask를 dout에 곱하세요.
-        raise NotImplementedError("Dropout.backward를 구현하세요.")
+        return dout * self.mask

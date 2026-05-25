@@ -138,27 +138,45 @@ db는 b(편향)이 loss에 미치는 영향이다.
 - 구현 대상: `SGD.update`
 - 수정 파일: `src/optimizers.py`
 - 테스트 명령: `pytest tests/test_sgd.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 4.29.14.png
+
+- 테스트 결과 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 4.30.29.png
+
+- 수정 내용 및 확인한 점: 
+원래 가중치에 그 가중치에 대한 미분값에 러닝레이트를 곱한 값을 빼면 된다.. 러닝메이트가 너무 크면 최소값을 지나치고 너무 작으면 학습이 오래걸리고 갱신이 안된다.
 
 ### 3.6 Step 6: Adam
 
 - 구현 대상: `Adam.update`
 - 수정 파일: `src/optimizers.py`
 - 테스트 명령: `pytest tests/test_adam.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 4.49.27.png
+
+- 테스트 결과 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 4.48.54.png
+
+- 수정 내용 및 확인한 점: 
+기존의 SGD는 모든 파라미터에 동일한 고정 learning_rate를 적용하므로, 기울기 크기나 방향 변화에 따라 갱신 폭을 조절하지 못해 탐색 경로가 비효율적일 수 있다.
+Adam은 기울기의 1차 모멘트(m)와 2차 모멘트(v)를 누적하고, 초기값이 0이라 작게 추정되는 문제를 편향 보정으로 보완한 뒤 파라미터별 업데이트 크기를 조정한다. 이를 통해 SGD보다 손실이 더 안정적으로 감소하는 것을 확인했다.
+t값이 0일 때 강하게 보정하고 학습이 충분히 진행되면 t값이 커져 보정효과가 점점 줄어든다.
 
 ### 3.7 Step 7: NeuralNetwork
 
 - 구현 대상: `NeuralNetwork`
 - 수정 파일: `src/network.py`
 - 테스트 명령: `pytest tests/test_neural_network.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷:
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 5.37.49.png
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 5.38.20.png
+
+- 테스트 결과 스크린샷:
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 5.42.11.png
+
+- 수정 내용 및 확인한 점:
+후반 부분을 먼저 완성해야 테스트가 실행가능하다.
 
 ### 3.8 Step 8: BatchNorm
 
