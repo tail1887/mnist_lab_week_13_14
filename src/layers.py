@@ -141,6 +141,7 @@ class Dropout:
     def __init__(self, drop_ratio=0.5):
         """Args: drop_ratio: 학습 중 0으로 만들 뉴런 비율."""
         self.drop_ratio = drop_ratio
+        self.mask = None
 
     def forward(self, x, train=True):
         """

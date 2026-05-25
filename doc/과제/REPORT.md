@@ -183,27 +183,45 @@ t값이 0일 때 강하게 보정하고 학습이 충분히 진행되면 t값이
 - 구현 대상: `BatchNorm.forward`, `BatchNorm.backward`
 - 수정 파일: `src/layers.py`
 - 테스트 명령: `pytest tests/test_batchnorm.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 8.07.39.png
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 8.07.52.png
+
+- 테스트 결과 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 8.38.51.png
+
+- 수정 내용 및 확인한 점: 
+배치놈은 affine레이어 이후에 relu에 값을 넣기전에 데이터를 정규화해주는 레이어다. 평균 0, 분산 1로 값을 바꿈으로써 데이터 분포를 깔끔하게 해준다. 여기서 중요한점은 모델이 학습가능한 가중치를 부여함으로서 최적의 위치로 이동할수 있게 자율권을 준다는점이다. 그래서 미분을 할때 도 두개의 레이어로 분리해서 생각하면 깔끔하게 계산할수 있따.
 
 ### 3.9 Step 9: Dropout
 
 - 구현 대상: `Dropout.forward`, `Dropout.backward`
 - 수정 파일: `src/layers.py`
 - 테스트 명령: `pytest tests/test_dropout.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 9.01.25.png
+
+- 테스트 결과 스크린샷: 
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 9.02.58.png
+
+- 수정 내용 및 확인한 점: 
+드롭아웃은 과적합 방지를 위한 정규화 층이다. 학습 중 활성값 일부를 랜덤하게 0으로 만들어, 모델이 특정 뉴런이나 특정 특징 조합에 과하게 의존하지 않도록 만든다. 순전파에서 0으로 꺼진 위치는 역전파에서도 같은 마스크에 의해 gradient가 전달되지 않는다.
+BatchNorm과 Dropout은 목적이 다르기 때문에 함께 사용할 수 있지만, 항상 같이 쓰는 것은 아니다. Dropout이 활성값을 랜덤하게 0으로 만들면 BatchNorm이 관찰하는 분포가 흔들릴 수 있으므로, 일반적으로는 `Affine -> BatchNorm -> ReLU` 순서로 학습을 안정화하고, 과적합이 여전히 심할 때 뒤쪽 fully-connected layer 근처에 Dropout을 추가한다.
 
 ### 3.10 Step 10: Train
 
 - 구현 대상: `train`
 - 수정 파일: `src/training.py`
 - 테스트 명령: `pytest tests/test_training.py -v`
-- 코드 스크린샷: `TODO` 이미지 첨부
-- 테스트 결과 스크린샷: `TODO` 이미지 첨부
-- 수정 내용 및 확인한 점: `TODO`
+- 코드 스크린샷:
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 9.29.16.png
+
+- 테스트 결과 스크린샷:
+/Users/tail1/Desktop/krafton-jungle/AI/mnist_lab_week_13_14/doc/과제/image/스크린샷 2026-05-25 오후 9.28.04.png
+
+- 수정 내용 및 확인한 점:
+미니배치 학습 루프에서 매 epoch마다 데이터를 섞고, 배치 단위로 forward → loss 계산 → backward → optimizer update가 수행되도록 구현했다.
+역전파 부분에서 소프트맥스와 크로스 엔트로피의 미분값을 곱한 공식을 사용해서 깔끔한 공식으로 바로 역전파를 시작할수 있었다.
 
 전체 테스트:
 
